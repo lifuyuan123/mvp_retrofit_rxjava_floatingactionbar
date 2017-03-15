@@ -93,4 +93,8 @@ public class MyAdapter extends RecyclerView.Adapter {
         this.callback = callback;
     }
 
+    public void remove(Demo.ResultBean.DataBean dataBean){
+        list.remove(dataBean);
+        notifyDataSetChanged();
+    }
 }

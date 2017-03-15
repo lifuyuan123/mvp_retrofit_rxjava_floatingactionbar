@@ -1,15 +1,17 @@
 package azsecuer.zhuoxin.com.mvp_rxjava_retrofit.Activity;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
+import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
 
 import java.util.ArrayList;
@@ -31,6 +33,7 @@ public class MainActivity extends AppCompatActivity {
     private FloatingActionButton fab1,fab2;
     private FloatingActionsMenu fabmenu;
     private Toolbar toolbar;
+    private MyAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,10 +55,20 @@ public class MainActivity extends AppCompatActivity {
         fab1= (FloatingActionButton) findViewById(R.id.FAB1);
         fab2= (FloatingActionButton) findViewById(R.id.FAB2);
         fabmenu= (FloatingActionsMenu) findViewById(R.id.FABmenu);
-        fab1.setImageResource(R.drawable.ic_timer_24dp);
-        fab2.setImageResource(R.drawable.ic_accessibility_24dp);
-
+        fab1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(MainActivity.this, "fab1", Toast.LENGTH_SHORT).show();
+            }
+        });
+        fab2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(MainActivity.this, "fab2", Toast.LENGTH_SHORT).show();
+            }
+        });
         initdata();
+
     }
 
     private void initdata() {
@@ -84,8 +97,20 @@ public class MainActivity extends AppCompatActivity {
             public void onNext(Demo demo) {
                 lists=demo.getResult().getData();
                 Log.i("1111",lists.toString());
-                MyAdapter adapter=new MyAdapter(MainActivity.this,lists);
+                adapter=new MyAdapter(MainActivity.this,lists);
                 recyclerview.setAdapter(adapter);
+                adapter.setCallback(new MyAdapter.Callback() {
+                    @Override
+                    public void click(int k) {
+                        String url=lists.get(k).getUrl();
+                        startActivity(new Intent(MainActivity.this,WEBActivity.class).putExtra("url",url));
+                    }
+
+                    @Override
+                    public void longclick(int k) {
+                        adapter.remove(lists.get(k));
+                    }
+                });
             }
         };
         //传入监听者
